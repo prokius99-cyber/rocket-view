@@ -1,0 +1,24 @@
+---
+/**
+ * Подключает появление элементов с атрибутом data-reveal (один раз, при входе в экран).
+ * Для одного оркестрованного момента: data-reveal-delay="120" — задержка в мс.
+ * Ставится один раз в макете страницы. Уважает prefers-reduced-motion (через CSS).
+ */
+---
+<script>
+  const els = document.querySelectorAll<HTMLElement>('[data-reveal]');
+  if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    els.forEach((el) => el.classList.add('is-in'));
+  } else {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (!e.isIntersecting) continue;
+        const el = e.target as HTMLElement;
+        el.style.transitionDelay = `${el.dataset.revealDelay || 0}ms`;
+        el.classList.add('is-in');
+        io.unobserve(el);
+      }
+    }, { rootMargin: '0px 0px -8% 0px' });
+    els.forEach((el) => io.observe(el));
+  }
+</script>

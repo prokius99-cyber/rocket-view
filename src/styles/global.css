@@ -1,0 +1,158 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+/* Классы Tailwind, связанные с токенами: bg-bg, text-text, text-muted, bg-accent, rounded-lg … */
+@theme inline {
+  --color-bg: var(--c-bg);
+  --color-surface: var(--c-surface);
+  --color-text: var(--c-text);
+  --color-muted: var(--c-muted);
+  --color-border: var(--c-border);
+  --color-accent: var(--c-accent);
+  --color-on-accent: var(--c-on-accent);
+  --color-accent-text: var(--c-accent-text);
+  --color-secondary: var(--c-secondary);
+  --color-danger: var(--c-danger);
+  --color-accent-hover: var(--c-accent-hover);
+  --color-poster: var(--c-poster);
+  --color-on-poster: var(--c-on-poster);
+  --color-on-poster-muted: var(--c-on-poster-muted);
+  --color-ink: var(--c-ink);
+  --font-display: var(--f-display);
+  --font-body: var(--f-body);
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+}
+
+@layer base {
+  html { color-scheme: light; -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--c-bg);
+    color: var(--c-text);
+    font-family: var(--f-body);
+    font-size: var(--t-body);
+    line-height: var(--t-body-lh);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; }
+  h1, h2 { font-weight: 900; font-variation-settings: var(--fv-display); text-transform: uppercase; }
+  h3 { font-weight: 800; }
+  h2 { font-size: var(--t-h2); line-height: var(--t-h2-lh); }
+  h3 { font-size: var(--t-h3); line-height: 1.2; }
+  p { text-wrap: pretty; overflow-wrap: anywhere; }
+  img, video, svg, canvas { display: block; max-width: 100%; }
+  img { height: auto; }
+  a { color: inherit; }
+  /* Оранжевый к бетону 1.99 — фокус рисуется цветом текста (в плакате он светлый). */
+  :focus-visible { outline: 3px solid var(--c-text); outline-offset: 3px; }
+  ::selection { background: var(--c-accent); color: var(--c-on-accent); }
+}
+
+@layer components {
+  .container-x { width: min(100% - 2 * var(--gutter), var(--content-max)); margin-inline: auto; }
+  .section-y { padding-block: var(--section-y); }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  .skip-link { position: absolute; left: var(--s-4); top: -100px; z-index: 100; padding: var(--s-3) var(--s-4); background: var(--c-text); color: var(--c-bg); border-radius: var(--r-sm); }
+  .skip-link:focus { top: var(--s-4); }
+  /* Появление по скроллу: один раз, без бесконечных анимаций. Скрипт — в Reveal.astro. */
+  [data-reveal] { opacity: 0; transform: translateY(14px); transition: opacity var(--d-enter) var(--e-out), transform var(--d-enter) var(--e-out); }
+  [data-reveal].is-in { opacity: 1; transform: none; }
+
+  /* ── Детали системы «Траектория» (DESIGN.md §4) — общие для всех секций ── */
+
+  /* Раскладка рейка 30 % + поле 70 % (≥ 64rem), ниже — одна колонка. */
+  .rail-grid { display: grid; gap: var(--gutter); }
+  @media (min-width: 64rem) { .rail-grid { grid-template-columns: var(--rail) minmax(0, 1fr); } }
+
+  /* Плакат: чёрный блок с фактурой обложки VK; роли цвета переопределены в tokens.css. */
+  .poster { position: relative; padding: var(--poster-pad); min-width: 0; isolation: auto; }
+  .poster-tex {
+    position: absolute; inset: 0; z-index: var(--z-texture); pointer-events: none; opacity: var(--o-smoke);
+    background: url('../assets/textures/cover.webp') right center / auto 130% no-repeat;
+  }
+  @media (min-width: 64rem) { .poster-tex { background-size: auto 150%; } }
+  .poster > :not(.poster-tex) { position: relative; z-index: var(--z-tag); }
+
+  /* Наклейка: бумажная этикетка, не карточка. paper — по умолчанию, line — на плакате, ink — на бетоне. */
+  .tag {
+    display: inline-flex; flex-direction: column; align-items: flex-start; gap: var(--s-1);
+    padding: var(--s-3) var(--s-5); background: var(--c-surface); color: var(--c-ink);
+    transform: rotate(var(--tilt, 0deg)); line-height: 1.05; max-width: 100%;
+  }
+  .tag--lg { padding: var(--s-4) var(--s-6); }
+  .tag--line, .tag--ink {
+    background: var(--c-poster); color: var(--c-on-poster); border: var(--b-tag) solid var(--c-on-poster);
+  }
+  .tag__big {
+    font-family: var(--f-display); font-weight: 900; font-variation-settings: var(--fv-display);
+    font-size: var(--t-tag); letter-spacing: var(--t-tag-ls); line-height: 1;
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  .tag__word {
+    font-family: var(--f-display); font-weight: 900; font-variation-settings: var(--fv-display);
+    font-size: var(--t-tag-s); letter-spacing: -0.02em; line-height: 1.05;
+  }
+  .tag__cap { font-size: var(--t-small); font-weight: 600; line-height: 1.35; }
+  .tilt-a { --tilt: var(--tilt-a); } .tilt-b { --tilt: var(--tilt-b); }
+  .tilt-c { --tilt: var(--tilt-c); } .tilt-d { --tilt: var(--tilt-d); }
+  .coal {
+    display: inline-block; width: 0.34em; height: 0.34em; margin-left: 0.14em; vertical-align: 0.08em;
+    border-radius: var(--r-pill); background: var(--c-accent);
+  }
+
+  /* Кнопка звонка — единственная заливка акцентом. */
+  .cta-call {
+    display: flex; flex-direction: column; justify-content: center; gap: var(--s-1);
+    min-height: var(--cta-h); padding: var(--s-2) var(--s-6);
+    background: var(--c-accent); color: var(--c-on-accent); text-decoration: none;
+    font-family: var(--f-display); font-weight: 900; font-variation-settings: var(--fv-display);
+    font-size: var(--t-cta); line-height: 1.05; letter-spacing: -0.01em; text-transform: uppercase;
+    transition: background-color var(--d-micro) var(--e-out);
+  }
+  .cta-call:hover { background: var(--c-accent-hover); }
+  .cta-call:active { transform: translateY(1px); }
+  .cta-call__num { font-family: var(--f-body); font-variation-settings: var(--fv-body); font-weight: 600; font-size: var(--t-small); letter-spacing: 0; text-transform: none; }
+  [data-tone="poster"] .cta-call { color: var(--c-on-accent); }
+
+  /* Вторичное действие — текстовая ссылка. */
+  .link-route {
+    display: inline-flex; align-items: center; min-height: var(--tap);
+    font-weight: 700; font-size: var(--t-link); text-decoration: underline;
+    text-decoration-thickness: var(--u-thick); text-underline-offset: var(--u-offset);
+  }
+
+  /* Траектория (src/scripts/trail.ts). */
+  [data-trail] { position: relative; }
+  .trail-svg {
+    position: absolute; inset: 0; width: 100%; height: 100%; max-width: none;
+    pointer-events: none; z-index: var(--z-trail); overflow: visible;
+  }
+  .trail-line { fill: none; stroke-width: var(--line-w); stroke-linecap: round; stroke-linejoin: round; }
+  .trail-line--poster { stroke: var(--c-secondary); }
+  .trail-line--ink { stroke: var(--c-ink); }
+  .trail-puffs { fill: var(--c-secondary); }
+  .trail-puff { opacity: 0; transition: opacity var(--d-smoke) var(--e-out); }
+  .trail-puff.is-on { opacity: var(--o-smoke); }
+  .trail-rocket {
+    position: absolute; left: 0; top: 0; z-index: var(--z-rocket); pointer-events: none;
+    width: var(--rocket-w); height: var(--rocket-h);
+    margin: calc(var(--rocket-h) / -2) 0 0 calc(var(--rocket-w) * -0.6);
+    transform-origin: 60% 50%; will-change: transform;
+  }
+  .trail-rocket svg { width: 100%; height: 100%; }
+  /* Невидимые опорные точки пути — позиционирует CSS секции. */
+  .trail-way { position: absolute; width: 1px; height: 1px; pointer-events: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  [data-reveal] { opacity: 1; transform: none; }
+}

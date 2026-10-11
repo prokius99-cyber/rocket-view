@@ -1,0 +1,187 @@
+---
+/**
+ * Первый экран (DESIGN.md §5, С1): рейка со знаком и звонком + чёрный плакат с ценниками.
+ * Траектория стартует из хвоста знака, ракета на загрузке долетает до первого ценника, линия ведёт к звонку.
+ * Раскладка: ≥ 64rem — рейка 30 % и коллаж на плакате; ниже — одна колонка, наклейки зигзагом.
+ * Опорные точки пути (.trail-way) у каждой раскладки свои: лишние скрыты CSS и из пути выпадают.
+ */
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/logo-white.png';
+import { business, hookahs } from '../data/site';
+
+const base = hookahs.find((h) => h.price === 1800)!; // есть в данных: меню Яндекс.Карт
+const promo = hookahs.find((h) => h.price === 1500)!;
+const rate = business.rating.yandex;
+const tel = `tel:${business.phone.e164}`;
+---
+<section class="hero" data-section="hero" aria-labelledby="hero-title" data-trail="load">
+  <div class="hero-grid container-x">
+    <div class="rail">
+      <div class="stamp">
+        <div class="disc">
+          <Image src={logo} alt="Rocket View — знак: ракета с хвостом кометы" width={224} height={224} loading="eager" fetchpriority="high" />
+          <span class="trail-way way-logo-m" data-trail-pt="1" aria-hidden="true"></span>
+          <span class="trail-way way-logo-d" data-trail-pt="1" aria-hidden="true"></span>
+        </div>
+        <div>
+          <p class="name">{business.name}</p>
+          <p class="desc">Кальянный lounge на&nbsp;3&nbsp;этаже ТРК PiterLand</p>
+        </div>
+      </div>
+
+      <span class="trail-way way-rail" data-trail-pt="2" aria-hidden="true"></span>
+
+      <div class="facts">
+        <p>{business.address.street} — 3&nbsp;этаж ТРК PiterLand, {business.address.landmark}.</p>
+        <p class="hours">Ежедневно 11:00–24:00</p>
+      </div>
+
+      <div class="act">
+        <a class="cta-call" href={tel} data-cta-hero>
+          Позвонить и спросить стол
+          <span class="cta-call__num">{business.phone.display}</span>
+          <span class="trail-way way-cta" data-trail-pt="21" aria-hidden="true"></span>
+        </a>
+        <a class="link-route" href={business.links.yandexMaps} rel="noopener">Маршрут</a>
+      </div>
+    </div>
+
+    <div class="poster" data-tone="poster">
+      <div class="poster-tex" aria-hidden="true"></div>
+      <span class="trail-way way-enter" data-trail-pt="2" aria-hidden="true"></span>
+      <div class="h1-wrap">
+        <h1 id="hero-title">
+          <span>Кальян</span>
+          <span>на третьем</span>
+          <span>этаже</span>
+        </h1>
+        <span class="trail-way way-mid" data-trail-pt="2.5" aria-hidden="true"></span>
+        <span class="trail-way way-low" data-trail-pt="3" aria-hidden="true"></span>
+      </div>
+
+      <ul class="tags" aria-label="Цены и оценка">
+        <li class="tag tag--lg tilt-a t-base" data-trail-pt="4" data-trail-stop>
+          <span class="tag__big">{base.price}&nbsp;₽</span>
+          <span class="tag__cap">{base.name.toLowerCase()}</span>
+        </li>
+        <li class="tag tag--lg tilt-c t-rate" data-trail-pt="5">
+          <span class="tag__big">{rate.value}</span>
+          <span class="tag__cap">{rate.badge}</span>
+          <span class="tag__cap">Яндекс.Карты, {rate.count}&nbsp;оценок</span>
+        </li>
+        <li class="tag tag--line tilt-b t-promo" data-trail-pt="6">
+          <span class="tag__big">{promo.price}&nbsp;₽<span class="coal" aria-hidden="true"></span></span>
+          <span class="tag__cap">кальян + чай, будни&nbsp;11–18</span>
+        </li>
+        <li class="tag tilt-d t-stub" data-trail-pt="7">
+          <span class="tag__cap stub-route">Приморский, 72 → ТРК PiterLand, 3&nbsp;этаж, рядом картинг</span>
+          <span class="tag__cap">Ежедневно 11:00–24:00</span>
+        </li>
+        <li class="tag tag--line tilt-a t-dog" data-trail-pt="8">
+          <span class="tag__word">Можно с&nbsp;собакой</span>
+        </li>
+        <li class="tag tilt-c t-games" data-trail-pt="9">
+          <span class="tag__word">Настолки</span>
+        </li>
+        <li class="tag tag--line tilt-b t-ps" data-trail-pt="10">
+          <span class="tag__word">PS5</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero { padding-block: var(--gutter); }
+  .hero-grid { display: flex; flex-direction: column; gap: var(--s-3); }
+
+  /* ── рейка ── */
+  .rail { display: contents; }
+  .stamp { display: flex; align-items: center; gap: var(--s-3); order: 0; }
+  .disc {
+    position: relative; flex: none; width: var(--s-12); height: var(--s-12);
+    border-radius: var(--r-pill); background: var(--c-poster);
+  }
+  .disc :global(img) { width: 100%; height: 100%; border-radius: var(--r-pill); }
+  .way-logo-m { left: 50%; bottom: 0; }
+  .way-logo-d { display: none; }
+  .name {
+    margin: 0; font-family: var(--f-display); font-weight: 900; font-variation-settings: var(--fv-display);
+    text-transform: uppercase; letter-spacing: -0.02em; font-size: var(--t-h3); line-height: 1;
+  }
+  .desc { margin: var(--s-1) 0 0; font-size: var(--t-small); font-weight: 600; line-height: 1.25; }
+  .facts { display: none; }
+  .way-rail { display: none; }
+  .act { order: 2; display: flex; flex-direction: column; }
+  .act .link-route { align-self: flex-start; }
+  .cta-call { position: relative; }
+  .way-cta { right: 15%; top: 0; }
+
+  /* ── плакат ── */
+  .poster { order: 1; overflow: hidden; padding-left: var(--s-12); }
+  .way-enter { left: var(--s-6); top: 0; }
+  .h1-wrap { position: relative; }
+  /* Коридор между кромкой плаката и H1: три точки по одной вертикали, чтобы сплайн не выгибался в буквы. */
+  .way-mid { left: calc(var(--s-6) - var(--s-12)); top: 50%; }
+  .way-low { left: calc(var(--s-6) - var(--s-12)); bottom: calc(-1 * var(--s-3)); }
+  h1 {
+    font-size: var(--t-hero); line-height: var(--t-hero-lh); letter-spacing: var(--t-hero-ls);
+    color: var(--c-text);
+  }
+  h1 span { display: block; }
+  @media (min-width: 23rem) { h1 span { white-space: nowrap; } }
+
+  .tags {
+    list-style: none; padding: 0;
+    margin: var(--s-8) 0 0;
+    display: flex; flex-direction: column; gap: var(--s-5);
+  }
+  .tags .tag { align-self: flex-start; padding: var(--s-3) var(--s-4); }
+  .t-base .tag__big, .t-rate .tag__big { font-size: calc(var(--t-tag) * 0.9); }
+  .t-rate { align-self: flex-end !important; }
+  .t-promo .tag__big { font-size: calc(var(--t-tag) * 0.72); }
+  .t-stub { align-self: stretch !important; }
+  .stub-route { font-weight: 800; }
+  .t-dog, .t-games, .t-ps { display: none !important; }
+
+  @media (min-width: 48rem) {
+    .tags { display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between; align-items: start; }
+    .t-stub { grid-column: 1 / -1; }
+  }
+
+  /* ── десктоп: рейка 30 % + коллаж ── */
+  @media (min-width: 64rem) {
+    .hero-grid {
+      display: grid; grid-template-columns: var(--rail) minmax(0, 1fr); gap: var(--gutter);
+      min-height: calc(100svh - 2 * var(--gutter));
+    }
+    .rail { display: flex; flex-direction: column; position: relative; }
+    .stamp { gap: var(--s-4); }
+    .disc { width: var(--s-24); height: var(--s-24); }
+    .way-logo-m { display: none; }
+    .way-logo-d { display: block; left: 80%; top: 84%; }
+    .way-rail { display: block; left: 62%; top: 42%; }
+    .facts { display: block; margin-top: auto; max-width: 92%; font-size: var(--t-link); }
+    .facts p { margin: 0 0 var(--s-3); }
+    .hours { color: var(--c-muted); }
+    .act { margin-top: var(--s-6); gap: var(--s-4); }
+    .way-cta { right: 0; top: 50%; }
+
+    .poster { padding: var(--poster-pad); }
+    .way-enter, .way-mid, .way-low { display: none; }
+
+    .poster .tags { position: absolute; inset: 0; margin: 0; display: block; pointer-events: none; }
+    .tags .tag { position: absolute; pointer-events: auto; padding: var(--s-4) var(--s-6); }
+    .tags .tag--line { padding: var(--s-3) var(--s-5); }
+    .t-base .tag__big, .t-rate .tag__big { font-size: var(--t-tag); }
+    .tags .tag__word { font-size: calc(var(--t-tag-s) * 0.72); }
+    .t-stub { display: none !important; }
+    .t-dog, .t-games, .t-ps { display: inline-flex !important; }
+    .t-base { left: 5%; top: 46%; }
+    .t-rate { right: 5%; top: 33%; }
+    .t-promo { left: 45%; top: 65%; }
+    .t-ps { left: 5%; bottom: 7%; }
+    .t-games { left: 21%; bottom: 5%; }
+    .t-dog { right: 5%; bottom: 7%; }
+  }
+</style>

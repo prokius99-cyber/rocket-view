@@ -1,0 +1,10 @@
+---
+import Base from '../layouts/Base.astro';
+import { business } from '../data/site';
+---
+<Base title={`Страница не найдена — ${business.name}`} description={`Такой страницы нет. Вернитесь на главную ${business.name} или позвоните нам.`}>
+  <main id="main" class="container-x section-y">
+    <h1 style="font-size: var(--t-h2)">Такой страницы нет</h1>
+    <p>Возможно, ссылка устарела. <a href={import.meta.env.BASE_URL}>Вернуться на главную</a> или позвонить: <a href={`tel:${business.phone.e164}`}>{business.phone.display}</a>.</p>
+  </main>
+</Base>

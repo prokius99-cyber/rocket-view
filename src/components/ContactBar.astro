@@ -1,0 +1,68 @@
+---
+/**
+ * Липкая панель звонка на телефоне (DESIGN.md §4): сплошная оранжевая планка «Позвонить» + ячейка «Маршрут».
+ * Появляется, когда кнопка звонка первого экрана ушла из вьюпорта, и прячется, пока видна кнопка в финальном блоке.
+ * Скрыта на ширине ≥ 64rem (там звонок в рейках hero, hookah и visit). Без JS панель видна всегда — звонок доступен. Данные — из site.ts.
+ */
+import { business } from '../data/site';
+---
+<nav class="contact-bar" aria-label="Связаться" data-contact-bar>
+  <a class="cb-call" href={`tel:${business.phone.e164}`}>
+    <span class="cb-call__label">Позвонить</span>
+    <span class="cb-call__num">{business.phone.display}</span>
+  </a>
+  <a class="cb-route" href={business.links.yandexMaps} rel="noopener">Маршрут</a>
+</nav>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('[data-contact-bar]');
+  const hero = document.querySelector('[data-cta-hero]');
+  const final = document.querySelector('[data-cta-final]');
+  if (bar && 'IntersectionObserver' in window) {
+    const seen = new Map<Element, boolean>();
+    const sync = () => {
+      const show = !seen.get(hero!) && !seen.get(final!);
+      bar.classList.toggle('is-shown', show);
+      bar.inert = !show;
+    };
+    bar.classList.add('is-managed');
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) seen.set(e.target, e.isIntersecting);
+      sync();
+    });
+    if (hero) { seen.set(hero, true); io.observe(hero); }
+    if (final) io.observe(final);
+    sync();
+  }
+</script>
+
+<style>
+  .contact-bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--z-bar);
+    display: flex; background: var(--c-accent);
+    padding-bottom: env(safe-area-inset-bottom);
+    transition: transform var(--d-state) var(--e-out);
+  }
+  .contact-bar:global(.is-managed) { transform: translateY(100%); }
+  .contact-bar:global(.is-managed.is-shown) { transform: none; }
+  .contact-bar a { min-height: var(--s-12); text-decoration: none; display: flex; }
+  .cb-call {
+    flex: 1; flex-direction: column; justify-content: center; padding: var(--s-1) var(--gutter);
+    color: var(--c-on-accent); min-height: calc(var(--s-12) + var(--s-2)) !important;
+  }
+  .cb-call__label {
+    font-family: var(--f-display); font-weight: 900; font-variation-settings: var(--fv-display);
+    text-transform: uppercase; font-size: var(--t-cta); line-height: 1.05;
+  }
+  .cb-call__num { font-size: var(--t-small); font-weight: 600; line-height: 1.2; }
+  .cb-route {
+    flex: none; width: var(--bar-route-w); align-items: center; justify-content: center;
+    background: var(--c-poster); color: var(--c-on-poster); font-weight: 700;
+    text-decoration: underline !important; text-underline-offset: var(--u-offset); text-decoration-thickness: var(--u-thick);
+  }
+  .cb-route:focus-visible { outline-color: var(--c-on-poster); outline-offset: -5px; }
+  .cb-call:focus-visible { outline-offset: -5px; }
+  @media (min-width: 64rem) { .contact-bar { display: none; } }
+  :global(body) { padding-bottom: calc(var(--s-12) + var(--s-2) + env(safe-area-inset-bottom)); }
+  @media (min-width: 64rem) { :global(body) { padding-bottom: 0; } }
+</style>

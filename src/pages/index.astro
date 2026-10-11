@@ -1,0 +1,47 @@
+---
+/**
+ * Главная: секции в порядке SPEC.md, оформление — DESIGN.md («Траектория»).
+ * Появления по скроллу нет (DESIGN.md §7): единственное движение — полёт ракеты по траектории.
+ */
+import Base from '../layouts/Base.astro';
+import ContactBar from '../components/ContactBar.astro';
+import Hero from '../sections/Hero.astro';
+import Hookah from '../sections/Hookah.astro';
+import Inside from '../sections/Inside.astro';
+import Reviews from '../sections/Reviews.astro';
+import Visit from '../sections/Visit.astro';
+import { business } from '../data/site';
+---
+<Base>
+  <main id="main">
+    <Hero />
+    <Hookah />
+    <Inside />
+    <Reviews />
+    <Visit />
+  </main>
+
+  <footer class="container-x site-footer">
+    <p>{business.name}. {business.address.city}, {business.address.street}, {business.address.note}.</p>
+    <p>Оценки и отзывы — <a href={business.links.yandexReviews}>Яндекс.Карты</a>, цены — меню на Яндекс.Картах.</p>
+  </footer>
+
+  <ContactBar />
+</Base>
+
+<script>
+  import { initTrails } from '../scripts/trail';
+  initTrails();
+</script>
+
+<style>
+  .site-footer {
+    padding-block: var(--s-12);
+    color: var(--c-muted);
+    font-size: var(--t-small);
+    border-top: 2px solid var(--c-border);
+    display: grid;
+    gap: var(--s-2);
+  }
+  .site-footer p { margin: 0; }
+</style>

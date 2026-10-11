@@ -1,0 +1,76 @@
+---
+/** Секция inside — бетон, коллаж из четырёх наклеек, без плаката, без траектории, без движения. */
+---
+<section data-section="inside" aria-labelledby="inside-title" class="inside section-y">
+  <div class="container-x rail-grid">
+    <div class="inside__rail">
+      <h2 id="inside-title" class="inside__title">Чем заняться</h2>
+      <p class="inside__lead">Кальян — не&nbsp;единственный повод подняться на&nbsp;третий этаж.</p>
+    </div>
+
+    <ul class="inside__field" role="list">
+      <li class="inside__item inside__item--a">
+        <div class="tag tag--ink tag--lg tilt-a">
+          <span class="tag__word">Авторские чаи и&nbsp;лимонады</span>
+          <span class="tag__cap">«сделали вкусные домашние лимонады и&nbsp;облепиховый согревающий чай»</span>
+          <span class="tag__cap">Евгения М., 7&nbsp;февраля 2026, Яндекс.Карты</span>
+        </div>
+      </li>
+      <li class="inside__item inside__item--b">
+        <div class="tag tag--lg tilt-b">
+          <span class="tag__big">PS5</span>
+          <span class="tag__cap">«Иногда играем здесь в&nbsp;PS5 с&nbsp;другом»</span>
+          <span class="tag__cap">Mr.Arsenicum, 24&nbsp;декабря 2025, Яндекс.Карты</span>
+        </div>
+      </li>
+      <li class="inside__item inside__item--c">
+        <div class="tag tilt-c">
+          <span class="tag__word">Настольные игры</span>
+        </div>
+      </li>
+      <li class="inside__item inside__item--d">
+        <div class="tag tag--ink tilt-d">
+          <span class="tag__word">Можно с&nbsp;собакой</span>
+        </div>
+      </li>
+    </ul>
+    <p class="inside__src">Чаи и&nbsp;лимонады, PS5, настольные игры и&nbsp;«можно с&nbsp;собакой» — из&nbsp;карточки заведения на&nbsp;Яндекс.Картах.</p>
+  </div>
+</section>
+
+<style>
+  .inside__title {
+    margin: 0; font-family: var(--f-display); font-weight: 900; font-variation-settings: var(--fv-display);
+    font-size: var(--t-h2); line-height: var(--t-h2-lh); letter-spacing: -0.02em; text-transform: uppercase;
+    overflow-wrap: normal; hyphens: manual;
+  }
+  .inside__lead {
+    margin: var(--s-6) 0 0; max-width: var(--measure);
+    font-size: var(--t-body); line-height: var(--t-body-lh); color: var(--c-text);
+  }
+  .inside__src { grid-column: 1 / -1; margin: var(--s-8) 0 0; color: var(--c-muted); font-size: var(--t-small); max-width: var(--measure); }
+  @media (min-width: 64rem) { .inside__src { grid-column: 2; } }
+  .inside__field {
+    list-style: none; margin: 0; padding: var(--s-3) 0 0;
+    display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-12);
+    min-width: 0;
+  }
+  .inside__item { margin: 0; padding: 0 var(--s-2); min-width: 0; display: flex; }
+  .inside__item--a { justify-content: flex-start; }
+  .inside__item--b { justify-content: flex-end; }
+  .inside__item--c { justify-content: flex-start; }
+  .inside__item--d { justify-content: flex-end; }
+  .inside .tag { max-width: 100%; }
+  .inside .tag__word { overflow-wrap: anywhere; }
+  .inside .tag__cap { max-width: 28ch; }
+
+  @media (min-width: 40rem) {
+    .inside__field {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: var(--s-8); row-gap: var(--s-12); align-items: start;
+    }
+    .inside__item--b, .inside__item--d { margin-top: var(--s-12); }
+    .inside__item--b { justify-content: center; }
+    .inside__item--c { justify-content: center; }
+  }
+</style>

@@ -1,0 +1,87 @@
+---
+import { business } from '../data/site';
+import { reviews, aspects } from '../data/reviews';
+
+const y = business.rating.yandex;
+const g = business.rating.twoGis;
+const tilts = ['tilt-d', 'tilt-b', 'tilt-a'];
+---
+<section data-section="reviews" aria-labelledby="reviews-title" class="section-y">
+  <div class="container-x rail-grid">
+    <div class="rail">
+      <h2 id="reviews-title" class="h2">Что говорят гости</h2>
+      <p class="tag tag--ink tag--lg tilt-a rating" role="group" aria-label={`Рейтинг на Яндекс.Картах ${y.value}, ${y.count} оценок`}>
+        <span class="tag__big">{y.value}</span>
+        <span class="tag__cap">{y.badge}</span>
+        <span class="tag__cap">Яндекс.Карты, {y.count}&nbsp;оценок</span>
+      </p>
+      <p class="minor">
+        2ГИС — {g.value}, {g.count}&nbsp;оценки.{" "}
+        <a href={business.links.twoGis} rel="noopener" target="_blank">Карточка в&nbsp;2ГИС<span class="sr-only"> (откроется в новой вкладке)</span></a>
+      </p>
+    </div>
+
+    <div class="field">
+      <ul class="aspects" aria-label="Доля положительных отзывов по темам">
+        {aspects.map((a) => (
+          <li class="aspect">
+            <span class="aspect__num">{a.share}&nbsp;%</span>
+            <span class="aspect__name">{a.name}</span>
+            <span class="aspect__cap">положительных из&nbsp;{a.count}&nbsp;отзывов</span>
+          </li>
+        ))}
+      </ul>
+
+      <div class="quotes">
+        {reviews.map((r, i) => (
+          <figure class={`tag quote ${tilts[i % tilts.length]}`}>
+            <blockquote class="quote__text" style="white-space: pre-line">
+              <p>«{r.text}»</p>
+            </blockquote>
+            <figcaption class="quote__by">
+              <span class="quote__name">{r.author}</span>
+              <span class="tag__cap">{r.date}</span>
+              <a href={r.source} rel="noopener" target="_blank">Читать на&nbsp;Яндекс.Картах<span class="sr-only"> (откроется в новой вкладке)</span></a>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .rail { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-8); }
+  .h2 {
+    margin: 0; font-family: var(--f-display); font-weight: 900; text-transform: uppercase;
+    font-variation-settings: var(--fv-display); font-size: var(--t-h2); line-height: var(--t-h2-lh);
+    letter-spacing: -0.02em; overflow-wrap: anywhere;
+  }
+  .rating { margin: 0; gap: var(--s-2); }
+  .minor { margin: 0; font-size: var(--t-small); font-weight: 600; line-height: 1.35; max-width: var(--measure); }
+  .minor a, .quote a {
+    color: inherit; text-decoration: underline; text-decoration-thickness: var(--u-thick); text-underline-offset: var(--u-offset);
+    display: inline-flex; align-items: center; min-height: var(--tap);
+  }
+  .field { display: flex; flex-direction: column; gap: var(--s-12); }
+
+  .aspects {
+    list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-6) var(--s-8);
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    border-top: var(--u-thick) solid var(--c-border); padding-top: var(--s-6);
+  }
+  .aspect { display: flex; flex-direction: column; gap: var(--s-1); }
+  .aspect__num {
+    font-family: var(--f-display); font-weight: 900; font-variation-settings: var(--fv-display);
+    font-size: var(--t-tag-s); letter-spacing: -0.02em; line-height: 1; font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  .aspect__name { font-size: var(--t-h3); font-weight: 800; line-height: 1.15; }
+  .aspect__cap { font-size: var(--t-small); font-weight: 600; color: var(--c-muted); line-height: 1.35; }
+
+  .quotes { display: grid; gap: var(--s-12) var(--s-8); grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); align-items: start; }
+  .quote { margin: 0; gap: var(--s-4); padding: var(--s-5) var(--s-6); width: 100%; }
+  .quote__text { margin: 0; }
+  .quote__text p { margin: 0; font-size: var(--t-body); line-height: var(--t-body-lh); font-weight: 400; overflow-wrap: anywhere; }
+  .quote__by { display: flex; flex-direction: column; gap: var(--s-1); }
+  .quote__name { font-size: var(--t-small); font-weight: 800; line-height: 1.35; }
+</style>

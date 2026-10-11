@@ -1,0 +1,88 @@
+---
+import { business, hookahs } from '../data/site';
+
+/* Порядок по цене: 1500 → 1800 → 2000 → 2200. Масштаб и наклон разные, лесенка вправо. */
+const order = [1500, 1800, 2000, 2200];
+const steps = [
+  { tilt: 'tilt-a', scale: 1, line: true },
+  { tilt: 'tilt-b', scale: 0.72, line: false },
+  { tilt: 'tilt-c', scale: 0.86, line: false },
+  { tilt: 'tilt-d', scale: 0.64, line: false },
+];
+const tags = order.map((p, i) => {
+  const h = hookahs.find((x) => x.price === p)!;
+  const caps: Record<number, string> = {
+    1500: 'кальян + чай, будни с 11 до 18 часов',
+    1800: 'кальян',
+    2000: 'Хука Про, электронная чаша',
+    2200: 'Кальян Премиум, сигарный табак',
+  };
+  return { ...h, ...steps[i], cap: caps[p], n: i + 1 };
+});
+---
+<section data-section="hookah" data-trail="static" aria-labelledby="hookah-title" class="hookah section-y">
+  <div class="container-x rail-grid">
+    <div class="hookah__rail">
+      <h2 id="hookah-title" class="hookah__h2">Кальяны</h2>
+      <p class="hookah__lead">Кальян и чай за 1500&nbsp;₽ по будням с 11:00 до 18:00. Кальян — 1800&nbsp;₽.</p>
+      <p class="hookah__src">Цены — <a class="hookah__link" href={business.links.yandexMaps} target="_blank" rel="noopener">меню на Яндекс.Картах</a></p>
+    </div>
+    <div class="poster hookah__poster" data-tone="poster">
+      <div class="poster-tex" aria-hidden="true"></div>
+      <ul class="hookah__list">
+        {tags.map((t) => (
+          <li class={`hookah__item hookah__item--${t.n}`}>
+            <div
+              class={`tag ${t.line ? 'tag--line' : ''} tag--lg ${t.tilt}`}
+              style={`--sc:${t.scale}`}
+              data-trail-pt={t.n}
+            >
+              <span class="tag__big">{t.price}&nbsp;₽{t.line && <span class="coal" aria-hidden="true"></span>}</span>
+              <span class="tag__cap">{t.cap}</span>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+    <a class="cta-call hookah__call" href={`tel:${business.phone.e164}`}>
+      Позвонить и спросить стол
+      <span class="cta-call__num">{business.phone.display}</span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .hookah__h2 {
+    font-family: var(--f-display); font-weight: 900; font-variation-settings: var(--fv-display);
+    font-size: var(--t-h2); line-height: var(--t-h2-lh); letter-spacing: -0.02em; text-transform: uppercase;
+    margin: 0 0 var(--s-4);
+  }
+  .hookah__call { margin-top: var(--s-8); }
+  /* Звонок стоит в разметке после плаката (порядок чтения на телефоне), на десктопе — внизу рейки. */
+  @media (min-width: 64rem) {
+    .hookah__rail { grid-column: 1; grid-row: 1; }
+    .hookah__poster { grid-column: 2; grid-row: 1; }
+    .hookah__call { grid-column: 1; grid-row: 1; align-self: end; margin-top: 0; }
+  }
+  .hookah__lead { font-size: var(--t-body); line-height: var(--t-body-lh); max-width: var(--measure); margin: 0 0 var(--s-4); }
+  .hookah__src { font-size: var(--t-small); font-weight: 600; margin: 0; }
+  .hookah__link {
+    display: inline-flex; align-items: center; min-height: var(--tap);
+    text-decoration: underline; text-decoration-thickness: var(--u-thick); text-underline-offset: var(--u-offset);
+  }
+  .hookah__poster { padding-block: var(--s-12); }
+  .hookah__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--s-12); }
+  .hookah__item { display: flex; }
+  /* Масштаб ценника: цифры уменьшаются, подпись остаётся ≥ 16px. */
+  .hookah__item .tag__big { font-size: calc(var(--t-tag) * var(--sc, 1)); }
+  .hookah__item .tag { max-width: 100%; }
+  /* 390: зигзаг — чётные ценники прижаты вправо. */
+  .hookah__item--2, .hookah__item--4 { justify-content: flex-end; }
+  .hookah__item--3 { padding-left: var(--s-4); }
+  @media (min-width: 48rem) {
+    .hookah__list { gap: var(--s-8); }
+    .hookah__item--2 { justify-content: flex-start; padding-left: 18%; }
+    .hookah__item--3 { padding-left: 36%; }
+    .hookah__item--4 { justify-content: flex-start; padding-left: 52%; }
+  }
+</style>

@@ -1,0 +1,25 @@
+---
+/**
+ * Обёртка секции: data-section (по нему гейт проверяет наличие), aria-labelledby, ритм.
+ * <Section id="catalog" title="Каталог"> … </Section>
+ * Заголовок можно скрыть визуально (hideTitle) — он останется для скринридеров.
+ */
+interface Props {
+  id: string;
+  title: string;
+  hideTitle?: boolean;
+  class?: string;
+  tag?: 'section' | 'div';
+}
+const { id, title, hideTitle = false, class: cls = '', tag: Tag = 'section' } = Astro.props;
+---
+<Tag id={id} data-section={id} aria-labelledby={`${id}-title`} class:list={['section-y', cls]}>
+  <div class="container-x">
+    <h2 id={`${id}-title`} class:list={['section-title', hideTitle && 'sr-only']}>{title}</h2>
+    <slot />
+  </div>
+</Tag>
+
+<style>
+  .section-title { margin-bottom: var(--s-8); max-width: 22ch; }
+</style>
